@@ -11,7 +11,7 @@ This command creates the box for Vagrant.
 
 Vagrant command
 -------------
-`vagrant box add packer-test build/centos-7.1-x64.box`
+`vagrant box add centos-7 build/centos-7.1-x64.box`
 
 This add's the box created from the packer command into Vagrant's local store.
 
