@@ -1,4 +1,20 @@
 {
+    "push": {
+      "name": "",
+      "vcs": true
+    },
+    "variables": {
+        "atlas_username": "{{env `ATLAS_USERNAME`}}",
+        "atlas_name": "{{env `ATLAS_NAME`}}"
+    },
+    "provisioners": [{
+        "type": "shell",
+        "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+        "scripts": [
+            "scripts/vboxguest.sh",
+            "scripts/compact.sh"
+        ]
+    }],
     "builders": [{
         "type": "virtualbox-iso",
         "virtualbox_version_file": ".vbox_version",
@@ -33,14 +49,17 @@
     }],
     "post-processors": [{
         "output": "build/centos-7.1-x64.box",
-        "type": "vagrant"
-    }],
-    "provisioners": [{
-        "type": "shell",
-        "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-        "scripts": [
-            "scripts/vboxguest.sh",
-            "scripts/compact.sh"
-        ]
+        "type": "vagrant",
+        "keep_input_artifact": false
+      },{
+        "type": "atlas",
+        "only": ["virtualbox-iso"],
+        "artifact": "{{user `atlas_username`}}/{{user `atlas_name`}}",
+        "artifact_type": "vagrant.box",
+        "metadata": {
+          "created_at": "{{timestamp}}",
+          "provider": "virtualbox",
+          "version": "1.0.0"
+        }
     }]
 }
